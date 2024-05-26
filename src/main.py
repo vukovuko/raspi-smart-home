@@ -11,6 +11,7 @@ devices = [
 pin_states = {address: 0xFF for name, address in devices}
 
 pin_mapping = {}
+pin_values = {}
 
 def generate_pin_mapping(devices):
     pin_mapping = {}
@@ -22,10 +23,14 @@ def generate_pin_mapping(devices):
                 "address": address,
                 "pin": pin,
                 "description": "",
-                "direction": "input"  # Default direction
+                "direction": ""  # Default direction
             }
         pin_offset += 8
     return pin_mapping
+
+def configure_pin(name, description, direction, level = ""):
+    set_pin_description(name, description)
+    set_pin_direction(name, direction) 
 
 def set_pin_description(pin, description):
     if pin not in pin_mapping:
@@ -41,7 +46,7 @@ def set_pin_direction(pin, direction):
     pin_mapping[pin]["direction"] = direction
     print(f"Set direction for pin {pin} (device {pin_mapping[pin]['name']} pin {pin_mapping[pin]['pin']}) to '{direction}'")
 
-def set_pin(pin, value):
+def set_pin_value(pin, value):
     if pin not in pin_mapping:
         raise ValueError(f"Pin {pin} is not valid")
     pin_info = pin_mapping[pin]
@@ -76,7 +81,6 @@ def get_all_pins():
     return pin_mapping
 
 def get_all_pin_values():
-    pin_values = {}
     for address in pin_states:
         try:
             pin_states[address] = bus.read_byte(address)
@@ -97,7 +101,8 @@ def get_all_pin_values():
         }
     return pin_values
 
-def pretty_print_pins(pin_values):
+def pretty_print_pins():
+    get_all_pin_values()
     print("\nPin Values:")
     print("----------------------------------------------------------------")
     print("{:<8} {:<12} {:<8} {:<15} {:<10} {:<6}".format("GlobalPin", "DeviceName", "Address", "Description", "Direction", "Value"))
@@ -120,10 +125,13 @@ if __name__ == "__main__":
     pin_mapping = generate_pin_mapping(devices)
     try:
         set_pin_description(5, "Example Pin 5")
-        set_pin(6, 0)  # Set pin 6 to LOW
+        set_pin_value(6, 0)
         get_pin(6)
-        pin_values = get_all_pin_values()
-        pretty_print_pins(pin_values)
+        pretty_print_pins()
+        configure_pin(15, "Senzor temperature", "input")
+        set_pin_value(15, 1)
+        set_pin_value(10, 1)
+        pretty_print_pins()
     except KeyboardInterrupt:
         print("Program stopped")
     finally:
