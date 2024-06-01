@@ -1,7 +1,7 @@
 import paho.mqtt.client as mqtt
 import time
 
-broker_address = "127.0.0.1"  # Use the IP address of your broker if not running locally
+broker_address = "localhost"  # Use the IP address of your broker if not running locally
 
 
 def on_publish(client, userdata, result):
