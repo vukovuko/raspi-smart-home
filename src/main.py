@@ -176,7 +176,7 @@ client = mqtt.Client()
 client.on_connect = on_connect
 client.on_message = on_message
 
-broker_address = "localhost"  # Use the IP address of your broker if not running locally
+broker_address = "192.168.0.15"  # Use the IP address of your broker if not running locally
 client.connect(broker_address, 1883, 60)
 
 pin_mapping = generate_pin_mapping(devices)
