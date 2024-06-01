@@ -168,7 +168,7 @@ def on_message(client, userdata, msg):
         elif command[0] == "get_all_pins":
             pin_values = get_all_pin_values()
             response = pretty_print_pins(pin_values)
-        else 
+        else:
             response = "kurac"
     except Exception as e:
         response = f"Error: {e}"
