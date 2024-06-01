@@ -1,4 +1,6 @@
 from smbus2 import SMBus
+import paho.mqtt.client as mqtt
+
 bus = SMBus(1)
 
 devices = [
@@ -136,4 +138,47 @@ if __name__ == "__main__":
         print("Program stopped")
     finally:
         cleanup()
+def on_connect(client, userdata, flags, rc):
+    print("Connected with result code " + str(rc))
+    client.subscribe("test/#")
 
+def on_message(client, userdata, msg):
+    command = msg.payload.decode().strip().split()
+    response = ""
+    try:
+        if command[0] == "set_pin":
+            pin = int(command[1])
+            value = int(command[2])
+            set_pin(pin, value)
+            response = f"Set pin {pin} to {value}"
+        elif command[0] == "get_pin":
+            pin = int(command[1])
+            pin_value = get_pin(pin)
+            response = f"Pin {pin} is {'HIGH' if pin_value == 1 else 'LOW'}"
+        elif command[0] == "set_description":
+            pin = int(command[1])
+            description = ' '.join(command[2:])
+            set_pin_description(pin, description)
+            response = f"Set description for pin {pin}"
+        elif command[0] == "set_direction":
+            pin = int(command[1])
+            direction = command[2]
+            set_pin_direction(pin, direction)
+            response = f"Set direction for pin {pin} to {direction}"
+        elif command[0] == "get_all_pins":
+            pin_values = get_all_pin_values()
+            response = pretty_print_pins(pin_values)
+    except Exception as e:
+        response = f"Error: {e}"
+    print(response)
+
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+broker_address = "localhost"  # Use the IP address of your broker if not running locally
+client.connect(broker_address, 1883, 60)
+
+pin_mapping = generate_pin_mapping(devices)
+
+client.loop_forever()
