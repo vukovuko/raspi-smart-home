@@ -9,7 +9,7 @@ devices = [
     ("mcp23017_2", 0x28),
     ("mcp23017_3", 0x29)
 ]
-devices = [(name, int(hex_address)) for name, hex_address in devices]
+
 # MCP23017 Registers
 IODIRA = 0x00  # I/O direction register for PORTA
 IODIRB = 0x01  # I/O direction register for PORTB
@@ -67,7 +67,7 @@ def set_pin_direction(pin, direction):
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
 
-    bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
+    bus.write_byte(address, register, pin_states[address][0 if device_pin < 8 else 1])
     pin_mapping[pin]["direction"] = direction
     print(f"Set direction for pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to '{direction}'")
 
@@ -85,7 +85,7 @@ def set_pin_value(pin, value):
         pin_states[address][0 if device_pin < 8 else 1] |= (1 << pin_offset)
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
-    bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
+    bus.write_byte(address, register, pin_states[address][0 if device_pin < 8 else 1])
     print(f"Set pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to {'HIGH' if value == 1 else 'LOW'}")
 
 def get_pin(pin):
