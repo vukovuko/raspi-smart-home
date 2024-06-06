@@ -85,6 +85,7 @@ def set_pin_value(pin, value):
         pin_states[address][0 if device_pin < 8 else 1] |= (1 << pin_offset)
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
+
     bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
     print(f"Set pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to {'HIGH' if value == 1 else 'LOW'}")
 
@@ -195,11 +196,11 @@ def on_message(client, userdata, msg):
             pin_values = get_all_pin_values()
             response = pretty_print_pins()
         elif command[0] == "kurac":
-            response = "jebem ti majku"
+            response = "jebem ti"
         else:
-            response = "Invalid command"
+            response = f"Invalid command {msg}"
     except Exception as e:
-        response = f"Error: {e} while processing command: {cmd_name} with arguments: {args}"
+        response = f"Error: {e}"
     print(response)
 
 client = mqtt.Client()
