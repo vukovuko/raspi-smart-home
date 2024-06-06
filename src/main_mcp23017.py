@@ -170,15 +170,17 @@ def on_connect(client, userdata, flags, rc):
 
 def on_message(client, userdata, msg):
     command = msg.payload.decode().strip().split()
-    print(type(command[0]))
     response = ""
     if command[0] == "set_pin":
         pin = int(command[1])
         value = int(command[2])
+        print(type(pin))
+        print(type(value))
         set_pin_value(pin, value)
         response = f"Set pin {pin} to {value}"
     elif command[0] == "get_pin":
         pin = int(command[1])
+        print(type(pin))
         pin_value = get_pin(pin)
         response = f"Pin {pin} is {'HIGH' if pin_value == 1 else 'LOW'}"
     elif command[0] == "set_description":
