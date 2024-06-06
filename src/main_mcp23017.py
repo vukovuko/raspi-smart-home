@@ -196,7 +196,7 @@ def on_message(client, userdata, msg):
             pin_values = get_all_pin_values()
             response = pretty_print_pins()
         else:
-            response = "Invalid command"
+            response = "Invalid command {msg}"
     except Exception as e:
         response = f"Error: {e}"
     print(response)
