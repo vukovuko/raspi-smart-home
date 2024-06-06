@@ -85,8 +85,7 @@ def set_pin_value(pin, value):
         pin_states[address][0 if device_pin < 8 else 1] |= (1 << pin_offset)
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
-    #print(pin_states[address][0 if device_pin < 8 else 1])
-    bus.write_byte_data(address, register, 1)
+    bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
     print(f"Set pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to {'HIGH' if value == 1 else 'LOW'}")
 
 def get_pin(pin):
@@ -172,35 +171,32 @@ def on_connect(client, userdata, flags, rc):
 def on_message(client, userdata, msg):
     command = msg.payload.decode().strip().split()
     response = ""
-    try:
-        if command[0] == "set_pin":
-            pin = int(command[1])
-            value = int(command[2])
-            set_pin_value(pin, value)
-            response = f"Set pin {pin} to {value}"
-        elif command[0] == "get_pin":
-            pin = int(command[1])
-            pin_value = get_pin(pin)
-            response = f"Pin {pin} is {'HIGH' if pin_value == 1 else 'LOW'}"
-        elif command[0] == "set_description":
-            pin = int(command[1])
-            description = ' '.join(command[2:])
-            set_pin_description(pin, description)
-            response = f"Set description for pin {pin}"
-        elif command[0] == "set_direction":
-            pin = int(command[1])
-            direction = command[2]
-            set_pin_direction(pin, direction)
-            response = f"Set direction for pin {pin} to {direction}"
-        elif command[0] == "get_all_pins":
-            pin_values = get_all_pin_values()
-            response = pretty_print_pins()
-        elif command[0] == "kurac":
-            response = "jebem ti"
-        else:
-            response = f"Invalid command {msg}"
-    except Exception as e:
-        response = f"Error: {e}"
+    if command[0] == "set_pin":
+        pin = int(command[1])
+        value = int(command[2])
+        set_pin_value(pin, value)
+        response = f"Set pin {pin} to {value}"
+    elif command[0] == "get_pin":
+        pin = int(command[1])
+        pin_value = get_pin(pin)
+        response = f"Pin {pin} is {'HIGH' if pin_value == 1 else 'LOW'}"
+    elif command[0] == "set_description":
+        pin = int(command[1])
+        description = ' '.join(command[2:])
+        set_pin_description(pin, description)
+        response = f"Set description for pin {pin}"
+    elif command[0] == "set_direction":
+        pin = int(command[1])
+        direction = command[2]
+        set_pin_direction(pin, direction)
+        response = f"Set direction for pin {pin} to {direction}"
+    elif command[0] == "get_all_pins":
+        pin_values = get_all_pin_values()
+        response = pretty_print_pins()
+    elif command[0] == "kurac":
+        response = "jebem ti"
+    else:
+        response = f"Invalid command {msg}"
     print(response)
 
 client = mqtt.Client()
