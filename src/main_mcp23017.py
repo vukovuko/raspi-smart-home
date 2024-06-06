@@ -9,7 +9,7 @@ devices = [
     ("mcp23017_2", 0x28),
     ("mcp23017_3", 0x29)
 ]
-devices = [(name, int(hex_address, 16)) for name, hex_address in devices]
+devices = [(name, int(hex_address)) for name, hex_address in devices]
 # MCP23017 Registers
 IODIRA = 0x00  # I/O direction register for PORTA
 IODIRB = 0x01  # I/O direction register for PORTB
