@@ -9,7 +9,7 @@ devices = [
     ("mcp23017_2", 0x28),
     ("mcp23017_3", 0x29)
 ]
-
+devices = [(name, int(hex_address, 16)) for name, hex_address in devices]
 # MCP23017 Registers
 IODIRA = 0x00  # I/O direction register for PORTA
 IODIRB = 0x01  # I/O direction register for PORTB
@@ -97,7 +97,7 @@ def get_pin(pin):
     register = GPIOA if device_pin < 8 else GPIOB
     pin_offset = device_pin % 8
 
-    pin_state = bus.read_byte_data(int(address,16), int(register,16))
+    pin_state = bus.read_byte_data(address, register)
     value = (pin_state >> pin_offset) & 1
     print(f"Pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) is {'HIGH' if value == 1 else 'LOW'}")
     return value
