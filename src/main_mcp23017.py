@@ -85,12 +85,7 @@ def set_pin_value(pin, value):
         pin_states[address][0 if device_pin < 8 else 1] |= (1 << pin_offset)
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
-    vrednost = 0
-    vrednost = pin_states[address][0 if device_pin < 8 else 1]
-    print(vrednost)
-    print(type(address))
-    print(type(register))
-    bus.write_byte_data(address, register, int(vrednost))
+    bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
     print(f"Set pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to {'HIGH' if value == 1 else 'LOW'}")
 
 def get_pin(pin):
