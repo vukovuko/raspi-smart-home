@@ -97,7 +97,7 @@ def get_pin(pin):
     register = GPIOA if device_pin < 8 else GPIOB
     pin_offset = device_pin % 8
 
-    pin_state = bus.read_byte_data(address, register)
+    pin_state = bus.read_byte(address, register)
     value = (pin_state >> pin_offset) & 1
     print(f"Pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) is {'HIGH' if value == 1 else 'LOW'}")
     return value
@@ -108,8 +108,8 @@ def get_all_pins():
 def get_all_pin_values():
     for address in pin_states:
         try:
-            pin_states[address][0] = bus.read_byte_data(address, GPIOA)
-            pin_states[address][1] = bus.read_byte_data(address, GPIOB)
+            pin_states[address][0] = bus.read_byte(address, GPIOA)
+            pin_states[address][1] = bus.read_byte(address, GPIOB)
         except OSError as e:
             print(f"Error reading from address {address}: {e}")
             continue
