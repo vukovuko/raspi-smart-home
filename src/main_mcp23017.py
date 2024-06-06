@@ -200,7 +200,6 @@ def on_message(client, userdata, msg):
     except Exception as e:
         response = f"Error: {e}"
     print(response)
-    print(command[0])
 
 client = mqtt.Client()
 client.on_connect = on_connect
