@@ -98,7 +98,7 @@ def get_pin(pin):
     pin_offset = device_pin % 8
     print(f"Address (should be int): {address} (type: {type(address)})")
     print(f"Register (should be int): {register} (type: {type(register)})")
-    pin_state = bus.read_byte_data(hex(address), hex(register))
+    pin_state = bus.read_byte_data(0x27, 0x01)
     value = (pin_state >> pin_offset) & 1
     print(f"Pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) is {'HIGH' if value == 1 else 'LOW'}")
     return value
