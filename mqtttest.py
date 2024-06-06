@@ -17,11 +17,8 @@ client.loop_start()
 
 # Publish messages
 while True:
-    client.publish("test/set_pin", "8 0")
+    client.publish("test/set_pin_value", "set_pin_value 8 0")
     time.sleep(1)
-    client.publish("get_pin", "8")
-    client.publish("get_all_pins")
+    client.publish("test/get_pin", "get_pin 8")
+    client.publish("test/get_all_pins", "get_all_pins")
     time.sleep(5)
-
-client.loop_stop()
-client.disconnect()

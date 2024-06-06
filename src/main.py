@@ -49,6 +49,8 @@ def set_pin_direction(pin, direction):
     print(f"Set direction for pin {pin} (device {pin_mapping[pin]['name']} pin {pin_mapping[pin]['pin']}) to '{direction}'")
 
 def set_pin_value(pin, value):
+    print(type(pin))
+    print(type(value))
     if pin not in pin_mapping:
         raise ValueError(f"Pin {pin} is not valid")
     pin_info = pin_mapping[pin]
@@ -138,42 +140,35 @@ if __name__ == "__main__":
         print("Program stopped")
     finally:
         cleanup()
+
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code " + str(rc))
     client.subscribe("test/#")
 
 def on_message(client, userdata, msg):
-    command = msg.payload.decode().strip().split()
+    command = msg.payload.decode().strip()
     response = ""
     try:
-        if command[0] == "set_pin":
-            pin = int(command[1])
-            value = int(command[2])
-            set_pin(pin, value)
-            response = f"Set pin {pin} to {value}"
-        elif command[0] == "get_pin":
-            pin = int(command[1])
-            pin_value = get_pin(pin)
-            response = f"Pin {pin} is {'HIGH' if pin_value == 1 else 'LOW'}"
-        elif command[0] == "set_description":
-            pin = int(command[1])
-            description = ' '.join(command[2:])
-            set_pin_description(pin, description)
-            response = f"Set description for pin {pin}"
-        elif command[0] == "set_direction":
-            pin = int(command[1])
-            direction = command[2]
-            set_pin_direction(pin, direction)
-            response = f"Set direction for pin {pin} to {direction}"
-        elif command[0] == "get_all_pins":
-            pin_values = get_all_pin_values()
-            response = pretty_print_pins(pin_values)
-        else:
-            response = "kurac"
+        parts = command.split()
+        cmd_name = parts[0]
+        args = parts[1:]
+        # print(parts)
+        # print(cmd_name)
+        # print(args)
+        
+        if cmd_name == "set_pin_value":
+            print(args[0])
+            print(args[1])
+            pin = int(args[0])
+            value = int(args[1])
+            print(type(pin))
+            print(type(value))
+            set_pin_value(pin, value) 
+        
     except Exception as e:
         response = f"Error: {e}"
     print(response)
-    print(command[0])
+
 
 client = mqtt.Client()
 client.on_connect = on_connect
