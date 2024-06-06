@@ -97,7 +97,7 @@ def get_pin(pin):
     register = GPIOA if device_pin < 8 else GPIOB
     pin_offset = device_pin % 8
 
-    pin_state = bus.read_byte_data(int(address), int(register))
+    pin_state = bus.read_byte_data(int(address,16), int(register,16))
     value = (pin_state >> pin_offset) & 1
     print(f"Pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) is {'HIGH' if value == 1 else 'LOW'}")
     return value
