@@ -199,9 +199,9 @@ def on_message(client, userdata, msg):
         elif command[0] == "kurac":
             response = "jebem ti majku"
         else:
-            response = f"Invalid command {msg}"
+            response = "Invalid command"
     except Exception as e:
-        response = f"Error: {e}"
+        response = f"Error: {e} while processing command: {cmd_name} with arguments: {args}"
     print(response)
 
 client = mqtt.Client()
