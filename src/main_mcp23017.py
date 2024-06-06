@@ -67,7 +67,7 @@ def set_pin_direction(pin, direction):
     else:
         pin_states[address][0 if device_pin < 8 else 1] &= ~(1 << pin_offset)
 
-    bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
+    #bus.write_byte_data(address, register, pin_states[address][0 if device_pin < 8 else 1])
     pin_mapping[pin]["direction"] = direction
     print(f"Set direction for pin {pin} (device {pin_mapping[pin]['name']} pin {device_pin}) to '{direction}'")
 
